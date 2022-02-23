@@ -84,12 +84,12 @@ export default function Home() {
   const fetchProposalById = async(id) => {
     try{
       const provider = await getProviderOrSigner();
-      const daoContract = getDaoContractInstance(provider);
+      const daoContract = getDAOContractInstance(provider);
       const proposal = await daoContract.proposals(id); // get the proposal with given ID from the proposals mapping/array from the dao contract instance
       const parsedProposal = { //create the JS object with values we can use. 
         proposalId: id,
         nftTokenId: proposal.nftTokenId.toString(),
-        deadline: new Date(parseInt(proposal.deadline.string()) * 1000),
+        deadline: new Date(parseInt(proposal.deadline.toString()) * 1000),
         yayVotes: proposal.yayVotes.toString(),
         nayVotes: proposal.nayVotes.toString(),
         executed: proposal.executed,
@@ -120,7 +120,7 @@ export default function Home() {
   const voteOnProposal = async(proposalId, _vote) => {
     try{
       const signer = await getProviderOrSigner(true);
-      const daoContract = getDaoContractInstance(signer);
+      const daoContract = getDAOContractInstance(signer);
       let vote = _vote === "YAY" ? 0 : 1; //if _vote = yay, vote = 0, if _vote = nay, vote = 1
       const txn = await daoContract.voteOnProposal(proposalId, vote); //call function from contract instance and pass parameters
       setLoading(true);
@@ -136,7 +136,7 @@ export default function Home() {
   const executeProposal = async(proposalId) => {
     try{
       const signer = await getProviderOrSigner(true);
-      const daoContract = getDaoContractInstance(signer);
+      const daoContract = getDAOContractInstance(signer);
       const txn = await daoContract.executeProposal(proposalId);
       setLoading(true);
       await txn.wait();
@@ -251,13 +251,12 @@ export default function Home() {
           <div>
             {proposals.map((p, index) => (
               <div key={index} className={styles.proposalCard}>
-                {console.log(p)}
                 <p>Proposal ID: {p.proposalId}</p>
                 <p>Fake NFT To Purchase: {p.nftTokenId}</p>
                 <p>Deadline: {p.deadline.toLocaleString()}</p>
                 <p>Yay Votes: {p.yayVotes}</p>
                 <p>Nay Votes: {p.nayVotes}</p>
-                <p>Executed?: {p.executed.toString()}</p>
+                <p>Executed: {p.executed.toString()}</p>
                 {p.deadline.getTime() > Date.now() && !p.executed ? (
                   <div className={styles.flex}>
                     <button className={styles.button2} onClick={() => voteOnProposal(p.proposalId, "YAY")}>Vote YAY</button>

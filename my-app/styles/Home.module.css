@@ -82,9 +82,12 @@
 .proposalCard {
   width: fit-content;
   margin-top: 0.25rem;
-  border: black 2px solid;
+  margin-bottom: 0.4rem;
+  border: #6C63FFff 2px solid;
   flex: 1;
   flex-direction: column;
+  padding: 10px;
+  border-radius: 4px;
 }
 
 .container {
